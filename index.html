@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator IP Semester - evolusi-pl-24-542620-SV-25063</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <div class="badge">Evolusi &amp; Konstruksi Perangkat Lunak</div>
+      <h1>Kalkulator IP Semester</h1>
+      <p class="subtitle">Hitung Indeks Prestasi Semester secara instan dan akurat</p>
+    </header>
+
+    <section class="card form-card">
+      <h2>Tambah Mata Kuliah</h2>
+      <form id="form-mk">
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="nama-mk">Nama Mata Kuliah</label>
+            <input type="text" id="nama-mk" name="nama-mk" placeholder="Contoh: Pemrograman Web" required>
+          </div>
+          <div class="form-group flex-1">
+            <label for="sks-mk">SKS</label>
+            <input type="number" id="sks-mk" name="sks-mk" min="1" max="6" value="3" required>
+          </div>
+          <div class="form-group flex-1">
+            <label for="nilai-mk">Nilai Huruf</label>
+            <select id="nilai-mk" name="nilai-mk" required>
+              <option value="A">A (4.0)</option>
+              <option value="AB">AB (3.5)</option>
+              <option value="B">B (3.0)</option>
+              <option value="BC">BC (2.5)</option>
+              <option value="C">C (2.0)</option>
+              <option value="D">D (1.0)</option>
+              <option value="E">E (0.0)</option>
+            </select>
+          </div>
+          <div class="form-group form-action">
+            <button type="submit" id="btn-tambah" class="btn btn-primary">Tambah</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="card result-card">
+      <div class="table-header-group">
+        <h2>Daftar Mata Kuliah Semester Ini</h2>
+        <button type="button" id="btn-reset" class="btn btn-secondary">Reset Data</button>
+      </div>
+
+      <div class="table-responsive">
+        <table id="tabel-mk">
+          <thead>
+            <tr>
+              <th scope="col" class="text-center">No</th>
+              <th scope="col">Mata Kuliah</th>
+              <th scope="col" class="text-center">SKS</th>
+              <th scope="col" class="text-center">Nilai</th>
+              <th scope="col" class="text-center">Bobot</th>
+              <th scope="col" class="text-center">Poin (SKS &times; Bobot)</th>
+              <th scope="col" class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="body-mk">
+            <!-- Data baris dinamis dimasukkan lewat app.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="summary-container">
+        <div class="summary-item">
+          <span class="summary-label">Total SKS Semester</span>
+          <span class="summary-value" id="total-sks">0</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Total Poin Mutu</span>
+          <span class="summary-value" id="total-poin">0.00</span>
+        </div>
+        <div class="summary-item summary-ip">
+          <span class="summary-label">IP Semester</span>
+          <span class="summary-value ip-score" id="nilai-ip">0.00</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>NIM: 24/542620/SV/25063 &bull; Praktikum Evolusi &amp; Konstruksi Perangkat Lunak</p>
+    </footer>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
