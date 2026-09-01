@@ -1,0 +1,18 @@
+{
+  "name": "evolusi-pl-24-542620-sv-25063",
+  "version": "1.0.0",
+  "description": "Kalkulator IP semester berbasis HTML statis dengan ES Modules dan CI",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "lint": "npx --yes html-validate index.html"
+  },
+  "keywords": [
+    "kalkulator-ip",
+    "gpa-calculator",
+    "es-modules",
+    "ci-cd"
+  ],
+  "author": "24/542620/SV/25063",
+  "license": "MIT"
+}
