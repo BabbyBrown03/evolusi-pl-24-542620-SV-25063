@@ -1,42 +1,93 @@
-name: CI
+name: Laravel CI/CD
 
 on:
   push:
-    branches:
-      - dev
-      - main
   pull_request:
     branches:
       - dev
       - main
 
 jobs:
-  uji:
-    name: Uji Unit (node:test)
+  build:
+    name: Build
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Pasang Node.js
-        uses: actions/setup-node@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          node-version: 20
+          php-version: '8.2'
+          extensions: mbstring, sqlite3, pdo_sqlite
+          coverage: none
 
-      - name: Jalankan Unit Test
-        run: npm test
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
-  lint:
-    name: Linting Markup (html-validate)
+  test:
+    name: Test
     runs-on: ubuntu-latest
+    needs: build
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Pasang Node.js
-        uses: actions/setup-node@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          node-version: 20
+          php-version: '8.2'
+          extensions: mbstring, sqlite3, pdo_sqlite
+          coverage: none
 
-      - name: Validasi HTML
-        run: npx --yes html-validate index.html
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run Laravel tests
+        run: php artisan test
+
+  staging:
+    name: Staging
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Deploy to staging
+        run: echo "Deploy ke staging"
+
+  production:
+    name: Production
+    runs-on: ubuntu-latest
+    needs: staging
+
+    if: github.ref == 'refs/heads/main'
+
+    environment:
+      name: production
+
+    steps:
+      - name: Step 1 - Maintenance mode
+        run: echo "1. php artisan down --retry=60"
+
+      - name: Step 2 - Pull latest code
+        run: echo "2. git pull origin main"
+
+      - name: Step 3 - Install production dependencies
+        run: echo "3. composer install --no-dev --optimize-autoloader"
+
+      - name: Step 4 - Run database migration
+        run: echo "4. php artisan migrate --force"
+
+      - name: Step 5 - Rebuild application cache
+        run: |
+          echo "5. php artisan config:cache"
+          echo "   php artisan route:cache"
+          echo "   php artisan view:cache"
+
+      - name: Step 6 - Restart queue workers
+        run: echo "6. php artisan queue:restart"
+
+      - name: Step 7 - Exit maintenance mode
+        run: echo "7. php artisan up"
