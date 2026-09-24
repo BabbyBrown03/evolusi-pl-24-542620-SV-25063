@@ -47,7 +47,54 @@ menjalankan deploy ke server.
 
 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Frontend Vue 3
+
+Frontend berada di `frontend/` dan memiliki dua halaman Vue Router:
+
+- `/` — beranda;
+- `/mahasiswa` — menampilkan data dari endpoint Laravel.
+
+Jalankan Laravel dan frontend secara lokal:
+
+```bash
+# Terminal 1
+php artisan serve
+
+# Terminal 2
+cd frontend
+npm ci
+npm run dev
+```
+
+Buat file `frontend/.env` jika ingin mengganti URL API:
+
+```bash
+VITE_API_URL=http://localhost:8000
+```
+
+Endpoint JSON Laravel tersedia di `GET /api/tugas`. Konfigurasi
+CORS mengizinkan frontend lokal dari `http://localhost:5173`.
+
+Perintah frontend:
+
+```bash
+npm ci
+npm run lint
+npm test
+npm run build
+```
+
+Workflow `.github/workflows/frontend.yml` memiliki empat job berantai:
+
+`lint` → `test` → `build` → `deploy`
+
+Job `build` mengunggah `frontend/dist` sebagai artifact. Job `deploy`
+hanya berjalan pada push ke `main`, mengunduh artifact tersebut, dan
+menampilkan daftar file `dist/` ke log tanpa menjalankan `npm run build` lagi.
+Pada Pull Request, job `deploy` tetap `skipped`, sedangkan lint, test,
+dan build tetap berjalan.
+
+ with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
 - [Powerful dependency injection container](https://laravel.com/docs/container).

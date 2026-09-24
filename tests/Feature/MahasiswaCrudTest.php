@@ -17,6 +17,21 @@ class MahasiswaCrudTest extends TestCase
             ->assertSee('Data Mahasiswa');
     }
 
+    public function test_endpoint_api_tugas_mengembalikan_data_mahasiswa(): void
+    {
+        Mahasiswa::create([
+            'nim' => '2026005',
+            'nama' => 'Rina Putri',
+            'jurusan' => 'Teknik Informatika',
+        ]);
+
+        $this->getJson('/api/tugas')
+            ->assertOk()
+            ->assertJson([
+                ['nim' => '2026005', 'nama' => 'Rina Putri', 'jurusan' => 'Teknik Informatika'],
+            ]);
+    }
+
     public function test_mahasiswa_dapat_dibuat(): void
     {
         $response = $this->post('/mahasiswa', [
