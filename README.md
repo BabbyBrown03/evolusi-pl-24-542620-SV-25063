@@ -7,7 +7,45 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## Pipeline CI/CD
+
+Aplikasi ini memakai workflow GitHub Actions dengan urutan:
+
+`build` → `test` → `staging` → `production`
+
+- `build` memasang dependency dengan `composer install`.
+- `test` menjalankan `php artisan test`.
+- `staging` hanya menulis echo dan tidak melakukan deploy sungguhan.
+- `production` hanya berjalan pada event `push` ke branch `main`.
+- `production` memakai environment GitHub bernama `production`.
+
+Pada push ke branch fitur dan pada pull request, `build`, `test`, dan
+`staging` tetap berjalan, tetapi `production` akan berstatus
+`skipped`. Ini disengaja untuk mencegah deploy dari PR. Untuk menjalankan
+production, merge perubahan ke `main` dengan membuat PR yang base branch-nya
+`main`; jika PR masih menuju `dev`, production tidak akan berjalan.
+
+### Pengaturan reviewer production
+
+`required reviewer` bukan setting yang dapat ditulis di dalam YAML. Di GitHub
+repository, buka **Settings → Environments → production**, aktifkan
+**Required reviewers**, lalu pilih reviewer. Job production akan menunggu
+review tersebut. Pastikan branch `dev` atau `main` memiliki branch protection
+yang mengizinkan merge setelah check `Build` dan `Test` berhasil.
+
+### Verifikasi lokal
+
+```bash
+composer install
+php artisan test
+```
+
+Workflow `build` dan `test` harus berhasil sebelum job berikutnya berjalan.
+`deploy.sh` menyimpan skrip tujuh langkah deployment dan menggunakan
+`set -e`, tetapi workflow sengaja hanya `echo` langkah tersebut dan belum
+menjalankan deploy ke server.
+
+
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
