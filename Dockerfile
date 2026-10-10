@@ -3,7 +3,7 @@
 # Build stage: Composer and PHP extensions used only while building the app.
 FROM php:8.2-alpine AS app-build
 
-RUN apk add --no-cache libsqlite3-dev oniguruma-dev \
+RUN apk add --no-cache sqlite-dev oniguruma-dev \
     && docker-php-ext-install pdo_sqlite mbstring \
     && rm -rf /var/lib/apk/*
 
@@ -31,7 +31,7 @@ RUN php artisan package:discover --ansi \
 # Runtime stage: only the runtime PHP image, libraries, app, and prod vendor.
 FROM php:8.2-alpine AS runtime
 
-RUN apk add --no-cache libsqlite3 \
+RUN apk add --no-cache sqlite-libs \
     && addgroup -S app \
     && adduser -S app -G app
 
