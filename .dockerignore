@@ -1,0 +1,15 @@
+node_modules
+vendor
+.git
+.env
+
+frontend/node_modules
+frontend/dist
+
+# Local runtime and editor files
+database/*.sqlite
+storage/logs/*.log
+bootstrap/cache/*.php
+.idea
+.vscode
+README.md

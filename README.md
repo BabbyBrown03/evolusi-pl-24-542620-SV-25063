@@ -47,7 +47,49 @@ menjalankan deploy ke server.
 
 
 
-## Frontend Vue 3
+## Docker
+
+Repository ini memiliki `Dockerfile` dan `.dockerignore`. Dockerfile
+menggunakan cache layer Composer dengan urutan menyalin `composer.json`
+dan `composer.lock` terlebih dahulu, baru memasang dependency, lalu menyalin
+kode aplikasi.
+
+Build image:
+
+```bash
+docker build -t evolusi-laravel .
+```
+
+Jalankan container:
+
+```bash
+docker run --name evolusi-laravel -p 8000:8000 -d evolusi-laravel
+```
+
+Periksa container:
+
+```bash
+docker ps
+```
+
+Buka browser:
+
+```text
+http://localhost:8000/mahasiswa
+```
+
+Endpoint API dari luar container:
+
+```text
+http://localhost:8000/api/tugas
+```
+
+Jika belum ada data, tambahkan data melalui halaman CRUD terlebih dahulu.
+Untuk uji perubahan cache, jalankan `docker build` pertama, build kedua
+tanpa perubahan kode, lalu ubah satu huruf pada kode dan build ketiga.
+Waktu pada output terminal digunakan sebagai bukti cache.
+
+
 
 Frontend berada di `frontend/` dan memiliki dua halaman Vue Router:
 
