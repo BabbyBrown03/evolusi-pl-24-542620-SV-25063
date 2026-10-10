@@ -3,11 +3,16 @@
 # Build stage: Composer and PHP extensions used only while building the app.
 FROM php:8.2-alpine AS app-build
 
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+
 RUN apk add --no-cache sqlite-dev oniguruma-dev \
     && docker-php-ext-install pdo_sqlite mbstring \
     && rm -rf /var/lib/apk/*
 
 WORKDIR /app
+
+# Copy Composer from the official Composer image into the build stage.
+COPY --from=composer:2.7 /usr/bin/composer /usr/local/bin/composer
 
 # Keep these manifests separate so the dependency layer is cached.
 COPY composer.json composer.lock ./
@@ -23,7 +28,8 @@ ENV APP_KEY=base64:+ASu1B/0uB80JU6yRD2ig4ZsyumjK842fwuiVLVEztk=
 
 # Copy application code after dependencies have been installed.
 COPY . .
-RUN php artisan package:discover --ansi \
+RUN rm -f bootstrap/cache/*.php \
+    && php artisan package:discover --ansi \
     && mkdir -p database \
     && touch database/database.sqlite \
     && php artisan migrate --force --no-interaction
